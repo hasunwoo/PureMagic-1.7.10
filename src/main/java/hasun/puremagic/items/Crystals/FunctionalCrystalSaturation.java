@@ -1,10 +1,12 @@
-package hasun.puremagic.items.sigils;
+package hasun.puremagic.items.Crystals;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import hasun.puremagic.api.puressence.PureEssenceController;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.FoodStats;
@@ -13,13 +15,13 @@ import net.minecraft.world.World;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class SigilSaturation extends Item implements ISigil {
+public class FunctionalCrystalSaturation extends Item implements IFunctionalCrystal {
     public static int consumptionPerOperation;
 
-    public SigilSaturation(int consume) {
+    public FunctionalCrystalSaturation(int consume) {
         consumptionPerOperation = consume;
         setMaxStackSize(1);
-        setUnlocalizedName("SigilofSaturation");
+        setUnlocalizedName("FunctionalCrystalSaturation");
     }
 
     private void initNBT(ItemStack itemStack) {
@@ -65,24 +67,13 @@ public class SigilSaturation extends Item implements ISigil {
 
     private float getExhaustionLevel(FoodStats foodStats) {
         try {
-            Field f = FoodStats.class.getDeclaredField("foodExhaustionLevel");
+            Field f = FoodStats.class.getDeclaredField((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")?"foodExhaustionLevel":"field_75126_c");
             f.setAccessible(true);
             return (Float) f.get(foodStats);
         } catch (Exception e) {
             return -1.0F;
         }
     }
-
-    private void setSaturationLevel(FoodStats foodStats, float level) {
-        try {
-            Field f = FoodStats.class.getDeclaredField("foodSaturationLevel");
-            f.setAccessible(true);
-            f.set(foodStats, level);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_) {
         initNBT(p_77624_1_);
@@ -109,7 +100,6 @@ public class SigilSaturation extends Item implements ISigil {
             if (!world.isRemote) {
                 EntityPlayer player = (EntityPlayer) entity;
                 int trytoconsume = (20 - player.getFoodStats().getFoodLevel()) * consumptionPerOperation;
-                ;
                 int canconsume = PureEssenceController.DrainPureEssenceFromPlayer(player.getDisplayName(), trytoconsume);
                 player.getFoodStats().addStats(canconsume, 0F);
             }

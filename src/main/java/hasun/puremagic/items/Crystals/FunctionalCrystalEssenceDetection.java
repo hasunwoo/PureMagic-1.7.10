@@ -1,4 +1,4 @@
-package hasun.puremagic.items.sigils;
+package hasun.puremagic.items.Crystals;
 
 import hasun.puremagic.api.puressence.PureEssenceController;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,13 +10,13 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class SigilEssenceDetection extends Item implements ISigil {
+public class FunctionalCrystalEssenceDetection extends Item implements IFunctionalCrystal {
     public static int consumptionPerOperation;
 
-    public SigilEssenceDetection(int consume) {
+    public FunctionalCrystalEssenceDetection(int consume) {
         consumptionPerOperation = consume;
         setMaxStackSize(1);
-        setUnlocalizedName("SigilofEssenceDetection");
+        setUnlocalizedName("FunctionalCrystalEssenceDetection");
     }
 
     private void initNBT(ItemStack itemStack) {
