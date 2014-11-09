@@ -1,4 +1,4 @@
-package commands;
+package hasun.puremagic.commands;
 
 import hasun.puremagic.api.puressence.PureEssenceController;
 import net.minecraft.command.CommandBase;

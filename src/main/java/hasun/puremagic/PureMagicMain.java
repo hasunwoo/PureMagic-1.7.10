@@ -1,7 +1,7 @@
 package hasun.puremagic;
 
-import commands.cheatSetEssenceLevel;
-import commands.cheatSetMaxEssence;
+import hasun.puremagic.commands.cheatSetEssenceLevel;
+import hasun.puremagic.commands.cheatSetMaxEssence;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
