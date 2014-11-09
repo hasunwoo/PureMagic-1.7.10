@@ -3,9 +3,10 @@ package hasun.puremagic.api.puressence;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.WorldSavedData;
 
-public class PureEssenceNetwork extends WorldSavedData{
+public class PureEssenceNetwork extends WorldSavedData {
     public int currentPureEssence = 0;
     public int MaxCapacity = 50000;
+
     public PureEssenceNetwork(String playerName) {
         super(playerName);
     }
@@ -18,7 +19,7 @@ public class PureEssenceNetwork extends WorldSavedData{
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("currentPureEssence",currentPureEssence);
-        tag.setInteger("MaxCapacity",MaxCapacity);
+        tag.setInteger("currentPureEssence", currentPureEssence);
+        tag.setInteger("MaxCapacity", MaxCapacity);
     }
 }
