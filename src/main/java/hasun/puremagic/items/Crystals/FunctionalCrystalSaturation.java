@@ -66,13 +66,14 @@ public class FunctionalCrystalSaturation extends Item implements IFunctionalCrys
 
     private float getExhaustionLevel(FoodStats foodStats) {
         try {
-            Field f = FoodStats.class.getDeclaredField((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")?"foodExhaustionLevel":"field_75126_c");
+            Field f = FoodStats.class.getDeclaredField((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment") ? "foodExhaustionLevel" : "field_75126_c");
             f.setAccessible(true);
             return (Float) f.get(foodStats);
         } catch (Exception e) {
             return -1.0F;
         }
     }
+
     @Override
     public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_) {
         initNBT(p_77624_1_);
@@ -101,7 +102,7 @@ public class FunctionalCrystalSaturation extends Item implements IFunctionalCrys
             if (!world.isRemote) {
                 EntityPlayer player = (EntityPlayer) entity;
                 //if crystal used by non-owner
-                if(!itemStack.stackTagCompound.getString("Owner").equals(player.getDisplayName())) return;
+                if (!itemStack.stackTagCompound.getString("Owner").equals(player.getDisplayName())) return;
                 int trytoconsume = (20 - player.getFoodStats().getFoodLevel()) * consumptionPerOperation;
                 int canconsume = PureEssenceController.DrainPureEssenceFromPlayer(itemStack.stackTagCompound.getString("Owner"), trytoconsume);
                 player.getFoodStats().addStats(canconsume, 0F);

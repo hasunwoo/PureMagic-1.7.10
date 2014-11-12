@@ -111,25 +111,29 @@ public class PureEssenceController {
         essence.markDirty();
         return 0;
     }
+
     /**
      * Get Tier of player Pure essence network.
-     * @param player   Player name.
+     *
+     * @param player Player name.
      * @return -1 if worldobject is client. else return player's tier
      */
-    public static int getTier(String player){
+    public static int getTier(String player) {
         if (!isServer()) return -1;
         initPureEssenceStorage(player);
         World worlds = MinecraftServer.getServer().worldServers[0];
         PureEssenceNetwork essence = (PureEssenceNetwork) worlds.loadItemData(PureEssenceNetwork.class, player);
         return essence.currentTier;
     }
+
     /**
      * Set Tier of player Pure essence network.
-     * @param player   Player name.
-     * @param tier     Tier to set.
+     *
+     * @param player Player name.
+     * @param tier   Tier to set.
      * @return -1 if worldobject is client. else return 0
      */
-    public static int setTier(String player,int tier){
+    public static int setTier(String player, int tier) {
         if (!isServer()) return -1;
         initPureEssenceStorage(player);
         World worlds = MinecraftServer.getServer().worldServers[0];
@@ -138,6 +142,7 @@ public class PureEssenceController {
         essence.markDirty();
         return 0;
     }
+
     public static boolean isServer() {
         return FMLCommonHandler.instance().getEffectiveSide().isServer();
     }

@@ -6,18 +6,23 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import hasun.puremagic.blocks.blockPureEssence;
 import hasun.puremagic.commands.cheatSetEssenceLevel;
 import hasun.puremagic.commands.cheatSetMaxEssence;
 import hasun.puremagic.commands.cheatSetTier;
 import hasun.puremagic.items.Crystals.FunctionalCrystalEssenceDetection;
 import hasun.puremagic.items.Crystals.FunctionalCrystalSaturation;
 import hasun.puremagic.items.playerEssenceStorageUpgrade.EssenceStorageUpgradeTier1;
+import hasun.puremagic.liquid.FluidPureEssence;
+import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = "PureMagic-hasun", version = "0.1")
+@Mod(modid = "PureMagic", name = "PureMagic", version = "0.1")
 public class PureMagicMain {
-    @Mod.Instance("PureMagic-hasun")
+    @Mod.Instance("PureMagic")
     public static PureMagicMain instance;
     public static Logger logger = null;
 
@@ -28,12 +33,16 @@ public class PureMagicMain {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        Fluid LiquidPureEssence = new FluidPureEssence("Pure Essence");
+        FluidRegistry.registerFluid(LiquidPureEssence);
         Item functionalCrystalSaturation = new FunctionalCrystalSaturation(1);
         GameRegistry.registerItem(functionalCrystalSaturation, "FunctionalCrystalSaturation");
         Item functionalCrystalEssenceDetection = new FunctionalCrystalEssenceDetection(0);
         GameRegistry.registerItem(functionalCrystalEssenceDetection, "FunctionalCrystalEssenceDetection");
         Item EssenceStorageUpTier1 = new EssenceStorageUpgradeTier1(50000);
-        GameRegistry.registerItem(EssenceStorageUpTier1,"EssenceStorageUpgradeTier1");
+        GameRegistry.registerItem(EssenceStorageUpTier1, "EssenceStorageUpgradeTier1");
+        Block BlockLiquidPE = new blockPureEssence(LiquidPureEssence);
+        GameRegistry.registerBlock(BlockLiquidPE, "blockPureEssence");
     }
 
     @Mod.EventHandler

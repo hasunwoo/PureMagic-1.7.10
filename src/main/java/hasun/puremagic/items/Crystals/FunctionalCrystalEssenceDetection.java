@@ -56,7 +56,7 @@ public class FunctionalCrystalEssenceDetection extends Item implements IFunction
         }
         if (!world.isRemote) {
             //if crystal used by non-owner
-            if(!itemstack.stackTagCompound.getString("Owner").equals(player.getDisplayName())) return itemstack;
+            if (!itemstack.stackTagCompound.getString("Owner").equals(player.getDisplayName())) return itemstack;
             player.addChatComponentMessage(new ChatComponentText("Maximum capacity:" + PureEssenceController.getMaxCapacity(itemstack.stackTagCompound.getString("Owner")) + "PE"));
             player.addChatComponentMessage(new ChatComponentText("Current Pure Essence:" + PureEssenceController.getCurrentPureEssence(itemstack.stackTagCompound.getString("Owner")) + "PE"));
             player.addChatComponentMessage(new ChatComponentText("Current Tier:" + PureEssenceController.getTier(itemstack.stackTagCompound.getString("Owner"))));

@@ -23,6 +23,6 @@ public class PureEssenceNetwork extends WorldSavedData {
     public void writeToNBT(NBTTagCompound tag) {
         tag.setInteger("currentPureEssence", currentPureEssence);
         tag.setInteger("MaxCapacity", MaxCapacity);
-        tag.setInteger("currentTier",currentTier);
+        tag.setInteger("currentTier", currentTier);
     }
 }

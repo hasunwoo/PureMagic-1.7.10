@@ -4,7 +4,7 @@ import hasun.puremagic.api.puressence.PureEssenceController;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 
-public class cheatSetTier extends CommandBase{
+public class cheatSetTier extends CommandBase {
     @Override
     public String getCommandName() {
         return "PM_SetTier";
