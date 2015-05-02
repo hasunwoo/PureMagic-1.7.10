@@ -5,7 +5,7 @@ import net.minecraft.world.WorldSavedData;
 
 public class PureEssenceNetwork extends WorldSavedData {
     public int currentPureEssence = 0;
-    public int MaxCapacity = 0;
+    public int MaxCapacity = 15000;
     public int currentTier = 0;
 
     public PureEssenceNetwork(String playerName) {

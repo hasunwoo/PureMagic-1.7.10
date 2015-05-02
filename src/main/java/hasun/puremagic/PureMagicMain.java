@@ -6,7 +6,10 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import hasun.puremagic.blocks.blockPureEssence;
+import hasun.puremagic.blocks.blockPureEssenceTube;
+import hasun.puremagic.client.rendererRegistery;
 import hasun.puremagic.commands.cheatSetEssenceLevel;
 import hasun.puremagic.commands.cheatSetMaxEssence;
 import hasun.puremagic.commands.cheatSetTier;
@@ -33,9 +36,12 @@ public class PureMagicMain {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        if (event.getSide() == Side.CLIENT) {
+            rendererRegistery.register(event);
+        }
         Fluid LiquidPureEssence = new FluidPureEssence("Pure Essence");
         FluidRegistry.registerFluid(LiquidPureEssence);
-        Item functionalCrystalSaturation = new FunctionalCrystalSaturation(1);
+        Item functionalCrystalSaturation = new FunctionalCrystalSaturation(10);
         GameRegistry.registerItem(functionalCrystalSaturation, "FunctionalCrystalSaturation");
         Item functionalCrystalEssenceDetection = new FunctionalCrystalEssenceDetection(0);
         GameRegistry.registerItem(functionalCrystalEssenceDetection, "FunctionalCrystalEssenceDetection");
@@ -43,6 +49,8 @@ public class PureMagicMain {
         GameRegistry.registerItem(EssenceStorageUpTier1, "EssenceStorageUpgradeTier1");
         Block BlockLiquidPE = new blockPureEssence(LiquidPureEssence);
         GameRegistry.registerBlock(BlockLiquidPE, "blockPureEssence");
+        Block BlockPureEssenceTube = new blockPureEssenceTube();
+        GameRegistry.registerBlock(BlockPureEssenceTube, "blockPureEssenceTube");
     }
 
     @Mod.EventHandler

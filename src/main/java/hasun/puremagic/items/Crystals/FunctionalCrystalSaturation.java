@@ -1,12 +1,13 @@
 package hasun.puremagic.items.Crystals;
 
+import hasun.puremagic.api.puressence.IFunctionalCrystal;
 import hasun.puremagic.api.puressence.PureEssenceController;
+import hasun.puremagic.api.puressence.utils.itemFunctionalCrystal.CommonFCUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
@@ -23,17 +24,9 @@ public class FunctionalCrystalSaturation extends Item implements IFunctionalCrys
         setUnlocalizedName("FunctionalCrystalSaturation");
     }
 
-    private void initNBT(ItemStack itemStack) {
-        if (itemStack.stackTagCompound == null) {
-            itemStack.setTagCompound(new NBTTagCompound());
-            itemStack.stackTagCompound.setBoolean("isActive", false);
-            itemStack.stackTagCompound.setString("Owner", "@New");
-        }
-    }
-
     @Override
-    public void onCreated(ItemStack p_77622_1_, World p_77622_2_, EntityPlayer p_77622_3_) {
-        initNBT(p_77622_1_);
+    public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
+        CommonFCUtil.initNBT(itemStack);
     }
 
     @Override
@@ -42,23 +35,18 @@ public class FunctionalCrystalSaturation extends Item implements IFunctionalCrys
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemstack, World p_77659_2_, EntityPlayer p_77659_3_) {
-        initNBT(itemstack);
-        if (itemstack.stackTagCompound.getString("Owner").equals("@New")) {
-            itemstack.stackTagCompound.setString("Owner", p_77659_3_.getDisplayName());
-        } else {
-            if (!itemstack.stackTagCompound.getString("Owner").equals(p_77659_3_.getDisplayName())) return itemstack;
-        }
-        if (p_77659_3_.isSneaking()) {
-            if (itemstack.stackTagCompound != null) {
-                boolean data = !itemstack.stackTagCompound.getBoolean("isActive");
-                itemstack.stackTagCompound.setBoolean("isActive", data);
-            }
-        } else {
-            if (!p_77659_2_.isRemote) {
-                p_77659_3_.addChatComponentMessage(new ChatComponentText("Your Food Level:" + p_77659_3_.getFoodStats().getFoodLevel()));
-                p_77659_3_.addChatComponentMessage(new ChatComponentText("Your Saturation Level:" + Math.floor(p_77659_3_.getFoodStats().getSaturationLevel())));
-                p_77659_3_.addChatComponentMessage(new ChatComponentText("Your Exhaustion Level:" + Math.floor(getExhaustionLevel(p_77659_3_.getFoodStats()))));
+    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer player) {
+        CommonFCUtil.initNBT(itemstack);
+        CommonFCUtil.setOwner(itemstack, player.getDisplayName());
+        if (CommonFCUtil.checkPermission(itemstack, player.getDisplayName())) {
+            if (player.isSneaking()) {
+                CommonFCUtil.toggleActivationStatus(itemstack);
+            } else {
+                if (!world.isRemote) {
+                    player.addChatComponentMessage(new ChatComponentText("Your Food Level:" + player.getFoodStats().getFoodLevel()));
+                    player.addChatComponentMessage(new ChatComponentText("Your Saturation Level:" + Math.floor(player.getFoodStats().getSaturationLevel())));
+                    player.addChatComponentMessage(new ChatComponentText("Your Exhaustion Level:" + Math.floor(getExhaustionLevel(player.getFoodStats()))));
+                }
             }
         }
         return itemstack;
@@ -75,37 +63,39 @@ public class FunctionalCrystalSaturation extends Item implements IFunctionalCrys
     }
 
     @Override
-    public void addInformation(ItemStack p_77624_1_, EntityPlayer p_77624_2_, List p_77624_3_, boolean p_77624_4_) {
-        initNBT(p_77624_1_);
-        if (p_77624_1_.stackTagCompound != null) {
-            if (p_77624_1_.stackTagCompound.getBoolean("isActive")) {
-                p_77624_3_.add("Activated");
-            } else {
-                p_77624_3_.add("Deactivated");
-            }
-        }
-        if (p_77624_1_.stackTagCompound.getString("Owner").equals("@New")) {
-            p_77624_3_.add("Right click to set owner");
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List data, boolean unknown) {
+        CommonFCUtil.initNBT(itemStack);
+        data.add("Consumption rate:1 food bar/" + consumptionPerOperation + "PE");
+        if (CommonFCUtil.isActive(itemStack)) {
+            data.add("Activated");
         } else {
-            p_77624_3_.add("Owner:" + p_77624_1_.stackTagCompound.getString("Owner"));
+            data.add("Deactivated");
+        }
+        if (!CommonFCUtil.hasOwner(itemStack)) {
+            data.add("Right click to set owner");
+        } else {
+            data.add("Owner:" + CommonFCUtil.getOwner(itemStack));
         }
     }
 
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity entity, int p_77663_4_, boolean p_77663_5_) {
-        initNBT(itemStack);
-        //if crystal is activated
-        if (!itemStack.stackTagCompound.getBoolean("isActive")) return;
-        //if crystal has owner
-        if (itemStack.stackTagCompound.getString("Owner").equals("@New")) return;
+        CommonFCUtil.initNBT(itemStack);
         if (entity instanceof EntityPlayer) {
-            if (!world.isRemote) {
-                EntityPlayer player = (EntityPlayer) entity;
-                //if crystal used by non-owner
-                if (!itemStack.stackTagCompound.getString("Owner").equals(player.getDisplayName())) return;
-                int trytoconsume = (20 - player.getFoodStats().getFoodLevel()) * consumptionPerOperation;
-                int canconsume = PureEssenceController.DrainPureEssenceFromPlayer(itemStack.stackTagCompound.getString("Owner"), trytoconsume);
-                player.getFoodStats().addStats(canconsume, 0F);
+            if (CommonFCUtil.checkPermission(itemStack, ((EntityPlayer) entity).getDisplayName()) && CommonFCUtil.isActive(itemStack)) {
+                if (entity instanceof EntityPlayer) {
+                    if (!world.isRemote) {
+                        EntityPlayer player = (EntityPlayer) entity;
+                        //if crystal used by non-owner
+                        int requiredfood = (20 - player.getFoodStats().getFoodLevel());
+                        if (requiredfood >= 1) {
+                            if (PureEssenceController.getCurrentPureEssence(((EntityPlayer) entity).getDisplayName()) >= consumptionPerOperation) {
+                                ((EntityPlayer) entity).getFoodStats().addStats(1, 0F);
+                                PureEssenceController.DrainPureEssenceFromPlayer(((EntityPlayer) entity).getDisplayName(), consumptionPerOperation);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

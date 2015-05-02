@@ -1,5 +1,6 @@
 package hasun.puremagic.items.playerEssenceStorageUpgrade;
 
+import hasun.puremagic.api.puressence.IPlayerEssenceStorageUpgrade;
 import hasun.puremagic.api.puressence.PureEssenceController;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -24,8 +25,10 @@ public class EssenceStorageUpgradeTier1 extends Item implements IPlayerEssenceSt
             if (PureEssenceController.getTier(player.getDisplayName()) == 0) {
                 PureEssenceController.setTier(player.getDisplayName(), 1);
                 PureEssenceController.setMaxCapacity(player.getDisplayName(), capacity);
-                player.addChatComponentMessage(new ChatComponentText("You have successfully upgraded to Tier to 2"));
+                player.addChatComponentMessage(new ChatComponentText("You have successfully upgraded to Tier to 1"));
                 --itemstack.stackSize;
+            } else {
+                player.addChatComponentMessage(new ChatComponentText("You must be Tier 0 to use this item"));
             }
             return itemstack;
         }

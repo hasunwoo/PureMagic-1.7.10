@@ -22,6 +22,11 @@ public class cheatSetEssenceLevel extends CommandBase {
     }
 
     @Override
+    public boolean isUsernameIndex(String[] parameter, int index) {
+        return index == 0 ? true : false;
+    }
+
+    @Override
     public void processCommand(ICommandSender sender, String[] cmd) {
         String target = cmd[0];
         int amount = Integer.parseInt(cmd[1]);
